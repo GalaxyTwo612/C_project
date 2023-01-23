@@ -63,7 +63,7 @@ int stringCmp(char *str1, char *str2){
             if(str1[index] == str2[index])
                 index++;
             else
-                return 0;
+                return -1;
         }
         return 1;
     }
@@ -98,7 +98,7 @@ void registration(){
         int flag = 0;
         for (int i = 0; i < globalIndex; ++i) {
             flag = stringCmp(info[i].email, email);
-            if (flag == -1){
+            if (flag == 1){
                 printf("This email has been used to create an account.\n");
                 int retry = 0;
                 printf("Enter 1 to retry:\nEnter 2 to exit:");
@@ -116,18 +116,17 @@ void login(){
     char lEmail[50];
     char passWord[50];
     int found  = -1;
+    int flag = 0;
     printf("This is login form:\n");
 
     // Email checking
     printf("Enter your email to login:");
     strInput(lEmail);
-    int flag = 0;
     eFound = -1;
     for (int i = 0; i < globalIndex; ++i) {
         flag = stringCmp(info[i].email, lEmail);
         eFound = flag == 1 ? i : -1;
         if (eFound != -1) break;
-        flag = 0;
     }
 
     // Password checking
@@ -183,7 +182,7 @@ void userActionSector(){
             printf("this is user action sector:\n");
             break;
         case 2:
-            login();
+            lobby();
             break;
         case 3:
             recordingAllDataToFile();
@@ -226,7 +225,7 @@ int emailValidation(char *str){
     int strLength = stringLen(str);
     int flag = 0;
     int i = 0;
-    int j = 0;
+    int j;
 
     // return -1 if the email starts with numbers
     if (str[0] >= '0' && str[0] <= '9') return -1;
@@ -243,7 +242,7 @@ int emailValidation(char *str){
     if (i < 5) flag = 0;
     if (flag == 0) return -1;
 
-    // Checking the '.' character. If the '.' is before '@', this won't be counted.
+    // Checking the '.' character for the top level domain. If the '.' is before '@', this won't be counted.
     else{
         flag = 0;
         for (j = i; j < strLength; ++j) {
